@@ -1,0 +1,195 @@
+openapi: 3.0.0
+info:
+  title: 'Mobile Application Subscription Management API'
+  version: '0.1'
+servers:
+  -
+    url: 'http://localhost'
+    description: ''
+paths:
+  /api/v1/login:
+    post:
+      tags:
+        - 'Study Case'
+      summary: Login
+      description: Login
+      operationId: login
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      responses:
+        '201':
+          description: Success
+        '405':
+          description: 'Invalid Input'
+  /api/v1/purchase:
+    post:
+      tags:
+        - 'Study Case'
+      summary: 'Purchase a product'
+      description: 'Purchase a product'
+      operationId: purchaseProduct
+      parameters:
+        -
+          name: X-Request-ID
+          in: header
+          description: 'Bearer {access-token}'
+          required: true
+          schema:
+            schema: bearer
+            type: string
+      requestBody:
+        $ref: '#/components/requestBodies/PurchaseRequest'
+      responses:
+        '201':
+          description: Success
+        '405':
+          description: 'Invalid Input'
+      security:
+        -
+          Bearer: []
+  /api/v1/register:
+    post:
+      tags:
+        - 'Study Case'
+      summary: 'Add a device'
+      description: 'Register a device'
+      operationId: addDevice
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterRequest'
+      responses:
+        '201':
+          description: Success
+        '405':
+          description: 'Invalid Input'
+  /api/v1/subscription:
+    get:
+      tags:
+        - 'Study Case'
+      summary: Subscription
+      description: Subscription
+      operationId: subscription
+      parameters:
+        -
+          name: X-Request-ID
+          in: header
+          description: 'Bearer {access-token}'
+          required: true
+          schema:
+            schema: bearer
+            type: string
+      responses:
+        '201':
+          description: Success
+        '405':
+          description: 'Invalid Input'
+      security:
+        -
+          Bearer: []
+components:
+  schemas:
+    ApplicationDTO:
+      properties:
+        appId:
+          type: integer
+        price:
+          type: float
+        name:
+          type: string
+        isActive:
+          type: bool
+      type: object
+      xml:
+        name: Application
+    DeviceDTO:
+      properties:
+        uid:
+          type: integer
+        appId:
+          type: integer
+        language:
+          type: integer
+        operatingSystem:
+          type: integer
+        isActive:
+          type: bool
+        createdDate:
+          type: datetime
+      type: object
+      xml:
+        name: Register
+    OrderDTO:
+      properties:
+        id:
+          type: integer
+        uid:
+          type: integer
+        appId:
+          type: integer
+        price:
+          type: float
+        createdDate:
+          type: datetime
+        expiredDate:
+          type: datetime
+        status:
+          type: integer
+      type: object
+      xml:
+        name: Order
+    LoginRequest:
+      properties:
+        uid:
+          type: integer
+        appId:
+          type: integer
+      type: object
+      xml:
+        name: LoginRequest
+    PurchaseRequest:
+      properties:
+        receipt:
+          type: string
+      type: object
+      xml:
+        name: PurchaseRequest
+    RegisterRequest:
+      properties:
+        uid:
+          type: integer
+        appId:
+          type: integer
+        language:
+          type: string
+          enum:
+            - TURKISH
+            - ENGLISH
+        operatingSystem:
+          type: string
+          enum:
+            - MACOS
+            - LINUX
+      type: object
+      xml:
+        name: RegisterRequest
+  requestBodies:
+    LoginRequest:
+      description: 'Login object'
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginRequest'
+    PurchaseRequest:
+      description: 'Purchase object'
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PurchaseRequest'
+    RegisterRequest:
+      description: 'Register object'
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterRequest'
